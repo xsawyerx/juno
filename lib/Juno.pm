@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Juno;
+# ABSTRACT: Asynchronous event-driven checking mechanism
 
 use Any::Moose;
 use namespace::autoclean;
@@ -14,3 +15,59 @@ has checks => (
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+__END__
+
+=head1 SYNOPSIS
+
+This runs an asynchronous checker on two servers (I<jack> and I<jill>), running
+an HTTP test every 10 seconds with an additional I<Host> header.
+
+    my $juno = Juno->new(
+        hosts    => [ 'jack', 'jill' ],
+        interval => 10,
+        checks   => {
+            HTTP => {
+                headers => {
+                    [ 'Host', 'example.com' ],
+                },
+
+                on_result => sub {
+                    my $result = shift;
+                    ...
+                },
+            },
+        },
+    );
+
+=head1 DESCRIPTION
+
+Juno is a hub of checking methods (HTTP, Ping, SNMP, etc.) meant to provide
+developers with an asynchronous event-based checking agent that returns
+results you can then use as probed data.
+
+This helps you write stuff like monitoring services.
+
+=head1 ATTRIBUTES
+
+=head2 checks
+
+The checks you want to run.
+
+This is a hashref of the checks. The key is the check itself (correlates to the
+class in C<Juno::Check::>) and the values are the attributes to that check.
+
+=head2 hosts
+
+An arrayref hosts you want all checks to monitor.
+
+=head2 interval
+
+The interval for every check.
+
+=head1 METHODS
+
+=head2 run
+
+Run Juno.
+
