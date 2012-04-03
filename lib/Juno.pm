@@ -13,6 +13,12 @@ has checks => (
     required => 1,
 );
 
+has check_objects => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    builder => '_build_check_objects',
+);
+
 has hosts => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
@@ -25,18 +31,26 @@ has interval => (
     default => 10,
 );
 
-sub run {
+sub _build_check_objects {
     my $self   = shift;
     my %checks = %{ $self->checks };
+    my @checks = ();
 
     foreach my $check ( keys %checks ) {
         my $class = "Juno::Check::$check";
-
         load_class($class);
 
-        my $checker = $class->new( %{ $checks{$check} } );
+        push @checks, $class->new( %{ $checks{$check} } );
+    }
 
-        $checker->run();
+    return \@checks;
+}
+
+sub run {
+    my $self = shift;
+
+    foreach my $check ( @{ $self->check_objects } ) {
+        $check->run();
     }
 }
 
