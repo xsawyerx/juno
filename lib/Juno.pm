@@ -53,6 +53,9 @@ an HTTP test every 10 seconds with an additional I<Host> header.
         },
     );
 
+    # makes juno run in the background
+    $juno->run;
+
 =head1 DESCRIPTION
 
 Juno is a hub of checking methods (HTTP, Ping, SNMP, etc.) meant to provide
