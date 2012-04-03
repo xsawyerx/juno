@@ -8,9 +8,22 @@ use namespace::autoclean;
 
 has checks => (
     is       => 'ro',
-    isa      => 'HashRef',
+    isa      => 'HashRef[HashRef]',
     required => 1,
 );
+
+has hosts => (
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
+    default => sub { [] },
+);
+
+has interval => (
+    is      => 'ro',
+    isa     => 'Int',
+    default => 10,
+);
+
 
 __PACKAGE__->meta->make_immutable;
 
