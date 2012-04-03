@@ -3,6 +3,7 @@ use warnings;
 package Juno;
 # ABSTRACT: Asynchronous event-driven checking mechanism
 
+use Class::Load 'load_class';
 use Any::Moose;
 use namespace::autoclean;
 
@@ -24,6 +25,20 @@ has interval => (
     default => 10,
 );
 
+sub run {
+    my $self   = shift;
+    my %checks = %{ $self->checks };
+
+    foreach my $check ( keys %checks ) {
+        my $class = "Juno::Check::$check";
+
+        load_class($class);
+
+        my $checker = $class->new( %{ $checks{$check} } );
+
+        $checker->run();
+    }
+}
 
 __PACKAGE__->meta->make_immutable;
 
