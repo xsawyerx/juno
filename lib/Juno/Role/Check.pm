@@ -42,6 +42,8 @@ has watcher => (
     writer => 'set_watcher',
 );
 
+requires 'check';
+
 sub run {
     my $self = shift;
 

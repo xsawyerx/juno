@@ -15,6 +15,8 @@ use Juno;
 
     has testattr => ( is => 'ro', isa => 'Str' );
 
+    sub check {1}
+
     sub run {
         my $self = shift;
         Test::More::isa_ok( $self, 'Juno::Check::TestCheckZd7DD' );

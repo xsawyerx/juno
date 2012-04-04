@@ -18,6 +18,8 @@ my $count = 0;
     use Test::More;
     with 'Juno::Role::Check';
 
+    sub check {1}
+
     sub run {
         my $self = shift;
         isa_ok( $self, 'Juno::Check::TestCheckZd7DD' );
@@ -66,6 +68,8 @@ my $count = 0;
     use Any::Moose;
     use Test::More;
     with 'Juno::Role::Check';
+
+    sub check {1}
 
     sub run {
         my $self = shift;
