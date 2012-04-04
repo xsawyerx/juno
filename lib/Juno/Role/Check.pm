@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-package Juno::Role::Checker;
-# ABSTRACT: Checker role for Juno
+package Juno::Role::Check;
+# ABSTRACT: Check role for Juno
 
 use Any::Moose 'Role';
 use namespace::autoclean;
@@ -15,7 +15,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This role provides Juno checkers with basic functionality they all share.
+This role provides Juno checks with basic functionality they all share.
 
 =head1 ATTRIBUTES
 
@@ -31,8 +31,8 @@ A callback for when an action failed.
 
 A callback to catch any result.
 
-This is useful if you have your own logic and don't count on the checker
-to decide if something is successful or not.
+This is useful if you have your own logic and don't count on the check to
+decide if something is successful or not.
 
 Suppose you run the HTTP check and you have a special setup where 403 Forbidden
 is actually a correct result.

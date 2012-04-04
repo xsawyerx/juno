@@ -11,7 +11,7 @@ use Juno;
 {
     package Juno::Check::TestCheckZd7DD;
     use Any::Moose;
-    with 'Juno::Role::Checker';
+    with 'Juno::Role::Check';
 
     has testattr => ( is => 'ro', isa => 'Str' );
 
