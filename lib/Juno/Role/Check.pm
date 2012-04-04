@@ -3,6 +3,7 @@ use warnings;
 package Juno::Role::Check;
 # ABSTRACT: Check role for Juno
 
+use AnyEvent;
 use Any::Moose 'Role';
 use namespace::autoclean;
 
@@ -35,6 +36,25 @@ has on_result => (
     isa       => 'CodeRef',
     predicate => 'has_on_result',
 );
+
+has watcher => (
+    is     => 'ro',
+    writer => 'set_watcher',
+);
+
+sub run {
+    my $self = shift;
+
+    # keep a watcher per check
+    $self->set_watcher( AnyEvent->timer(
+        interval => $self->interval,
+        cb       => sub {
+            $self->check;
+        },
+    ) );
+
+    return 1;
+}
 
 1;
 
