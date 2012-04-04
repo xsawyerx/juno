@@ -15,42 +15,43 @@ my $count = 0;
 {
     package Juno::Check::TestCheckZd7DD;
     use Any::Moose;
+    use Test::More;
     with 'Juno::Role::Check';
 
     sub run {
         my $self = shift;
-        Test::More::isa_ok( $self, 'Juno::Check::TestCheckZd7DD' );
-        Test::More::ok( $self->does('Juno::Role::Check'), 'Does check role' );
+        isa_ok( $self, 'Juno::Check::TestCheckZd7DD' );
+        ok( $self->does('Juno::Role::Check'), 'Does check role' );
 
-        Test::More::ok( $self->has_on_success, 'Got on_success' );
-        Test::More::ok( $self->has_on_fail,    'Got on_fail'    );
-        Test::More::ok( $self->has_on_result,  'Got on_result'  );
+        ok( $self->has_on_success, 'Got on_success' );
+        ok( $self->has_on_fail,    'Got on_fail'    );
+        ok( $self->has_on_result,  'Got on_result'  );
 
-        Test::More::is(
+        is(
             $self->on_success->(),
             'success!',
             'Correct on_success',
         );
 
-        Test::More::is(
+        is(
             $self->on_fail->(),
             'fail!',
             'Correct on_fail',
         );
 
-        Test::More::is(
+        is(
             $self->on_result->(),
             'result!',
             'Correct on_result',
         );
 
-        Test::More::is_deeply(
+        is_deeply(
             $self->hosts,
             ['A', 'B'],
             'Hosts provided by Juno.pm',
         );
 
-        Test::More::cmp_ok(
+        cmp_ok(
             $self->interval,
             '==',
             30,
@@ -63,20 +64,21 @@ my $count = 0;
 {
     package Juno::Check::TestCheckF7A23;
     use Any::Moose;
+    use Test::More;
     with 'Juno::Role::Check';
 
     sub run {
         my $self = shift;
-        Test::More::isa_ok( $self, 'Juno::Check::TestCheckF7A23' );
-        Test::More::ok( $self->does('Juno::Role::Check'), 'Does check role' );
+        isa_ok( $self, 'Juno::Check::TestCheckF7A23' );
+        ok( $self->does('Juno::Role::Check'), 'Does check role' );
 
-        Test::More::is_deeply(
+        is_deeply(
             $self->hosts,
             ['C', 'D'],
             'Hosts were overwritten',
         );
 
-        Test::More::cmp_ok(
+        cmp_ok(
             $self->interval,
             '==',
             40,
@@ -89,12 +91,13 @@ my $count = 0;
 {
     package Juno::Check::TestCheckFzVS33;
     use Any::Moose;
+    use Test::More;
     with 'Juno::Role::Check';
 
     sub check {
         my $self = shift;
-        Test::More::isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
-        Test::More::ok( $self->does('Juno::Role::Check'), 'Does check role' );
+        isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
+        ok( $self->does('Juno::Role::Check'), 'Does check role' );
 
         $count++;
 
