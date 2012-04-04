@@ -6,6 +6,18 @@ package Juno::Role::Check;
 use Any::Moose 'Role';
 use namespace::autoclean;
 
+has hosts => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub { [] },
+);
+
+has interval => (
+    is      => 'ro',
+    isa     => 'Int',
+    default => 10,
+);
+
 has on_success => (
     is        => 'ro',
     isa       => 'CodeRef',
@@ -35,6 +47,14 @@ __END__
 This role provides Juno checks with basic functionality they all share.
 
 =head1 ATTRIBUTES
+
+=head2 hosts
+
+Custom per-check hosts list.
+
+=head2 interval
+
+Custom per-check interval.
 
 =head2 on_success
 
