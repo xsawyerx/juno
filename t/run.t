@@ -11,6 +11,7 @@ use Juno;
 {
     package Juno::Check::TestCheckZd7DD;
     use Any::Moose;
+    use Test::More;
     with 'Juno::Role::Check';
 
     has testattr => ( is => 'ro', isa => 'Str' );
@@ -19,8 +20,8 @@ use Juno;
 
     sub run {
         my $self = shift;
-        Test::More::isa_ok( $self, 'Juno::Check::TestCheckZd7DD' );
-        Test::More::is( $self->testattr, 'testval', 'Got test attr value' );
+        isa_ok( $self, 'Juno::Check::TestCheckZd7DD' );
+        is( $self->testattr, 'testval', 'Got test attr value' );
     }
 }
 
