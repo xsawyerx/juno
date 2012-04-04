@@ -7,18 +7,6 @@ use Class::Load 'load_class';
 use Any::Moose;
 use namespace::autoclean;
 
-has checks => (
-    is       => 'ro',
-    isa      => 'HashRef[HashRef]',
-    required => 1,
-);
-
-has check_objects => (
-    is      => 'ro',
-    isa     => 'ArrayRef',
-    builder => '_build_check_objects',
-);
-
 has hosts => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
@@ -31,6 +19,18 @@ has interval => (
     default => 10,
 );
 
+has checks => (
+    is       => 'ro',
+    isa      => 'HashRef[HashRef]',
+    required => 1,
+);
+
+has check_objects => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    builder => '_build_check_objects',
+);
+
 sub _build_check_objects {
     my $self   = shift;
     my %checks = %{ $self->checks };
@@ -40,7 +40,14 @@ sub _build_check_objects {
         my $class = "Juno::Check::$check";
         load_class($class);
 
-        push @checks, $class->new( %{ $checks{$check} } );
+        my %check_data = %{ $checks{$check} };
+
+        foreach my $prop_key ( qw/ hosts interval / ) {
+            exists $check_data{$prop_key}
+                or $check_data{$prop_key} = $self->$prop_key;
+        }
+
+        push @checks, $class->new(%check_data);
     }
 
     return \@checks;
