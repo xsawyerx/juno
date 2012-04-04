@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 14;
 use Test::Fatal;
 
 use Juno;
@@ -39,10 +39,35 @@ use Juno;
             'result!',
             'Correct on_result',
         );
+
+        Test::More::is_deeply(
+            $self->hosts,
+            ['A', 'B'],
+            'Hosts provided by Juno.pm',
+        );
+    }
+}
+
+{
+    package Juno::Check::TestCheckF7A23;
+    use Any::Moose;
+    with 'Juno::Role::Check';
+
+    sub run {
+        my $self = shift;
+        Test::More::isa_ok( $self, 'Juno::Check::TestCheckF7A23' );
+        Test::More::ok( $self->does('Juno::Role::Check'), 'Does check role' );
+
+        Test::More::is_deeply(
+            $self->hosts,
+            ['C', 'D'],
+            'Hosts were overwritten',
+        );
     }
 }
 
 my $juno = Juno->new(
+    hosts  => ['A', 'B'],
     checks => {
         TestCheckZd7DD => {
             on_success => sub { 'success!' },
@@ -54,4 +79,16 @@ my $juno = Juno->new(
 
 isa_ok( $juno, 'Juno' );
 
+$juno->run;
+
+$juno = Juno->new(
+    hosts  => ['A', 'B'],
+    checks => {
+        TestCheckF7A23 => {
+            hosts => ['C', 'D'],
+        },
+    },
+);
+
+isa_ok( $juno, 'Juno' );
 $juno->run;
