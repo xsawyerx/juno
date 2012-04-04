@@ -3,11 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 25;
 use Test::Fatal;
 
 use Juno;
+use AnyEvent;
 
+my $count = 0;
+
+# this will help us test the majority of things
 {
     package Juno::Check::TestCheckZd7DD;
     use Any::Moose;
@@ -55,6 +59,7 @@ use Juno;
     }
 }
 
+# this helps us check that attributes were overwritten
 {
     package Juno::Check::TestCheckF7A23;
     use Any::Moose;
@@ -80,6 +85,24 @@ use Juno;
     }
 }
 
+# this helps us check that the check() method actually works
+{
+    package Juno::Check::TestCheckFzVS33;
+    use Any::Moose;
+    with 'Juno::Role::Check';
+
+    sub check {
+        my $self = shift;
+        Test::More::isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
+        Test::More::ok( $self->does('Juno::Role::Check'), 'Does check role' );
+
+        $count++;
+
+        $self->on_success->( $self, 'finished' );
+    }
+}
+
+# uses the first check
 {
     my $juno = Juno->new(
         hosts    => ['A', 'B'],
@@ -98,6 +121,7 @@ use Juno;
     $juno->run;
 }
 
+# uses the second check
 {
     my $juno = Juno->new(
         hosts  => ['A', 'B'],
@@ -113,3 +137,31 @@ use Juno;
 
     $juno->run;
 }
+
+# uses the third check
+{
+    my $cv   = AnyEvent->condvar;
+    my $juno = Juno->new(
+        interval => 1,
+        checks   => {
+            TestCheckFzVS33 => {
+                on_success => sub {
+                    my $self = shift;
+                    my $msg  = shift;
+
+                    isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
+                    is( $msg, 'finished', 'Got correct msg' );
+
+                    $count == 2 and $cv->send;
+                },
+            },
+        },
+    );
+
+    isa_ok( $juno, 'Juno' );
+
+    $juno->run;
+
+    $cv->recv;
+}
+
