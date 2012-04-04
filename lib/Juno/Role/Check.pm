@@ -8,7 +8,7 @@ use namespace::autoclean;
 
 has hosts => (
     is      => 'ro',
-    isa     => 'ArrayRef',
+    isa     => 'ArrayRef[Str]',
     default => sub { [] },
 );
 
@@ -35,8 +35,6 @@ has on_result => (
     isa       => 'CodeRef',
     predicate => 'has_on_result',
 );
-
-
 
 1;
 
