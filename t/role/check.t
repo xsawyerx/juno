@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 use Test::Fatal;
 
 use Juno;
@@ -45,6 +45,13 @@ use Juno;
             ['A', 'B'],
             'Hosts provided by Juno.pm',
         );
+
+        Test::More::cmp_ok(
+            $self->interval,
+            '==',
+            30,
+            'Interval provided by Juno.pm',
+        );
     }
 }
 
@@ -63,32 +70,46 @@ use Juno;
             ['C', 'D'],
             'Hosts were overwritten',
         );
+
+        Test::More::cmp_ok(
+            $self->interval,
+            '==',
+            40,
+            'Interval was overwritten',
+        );
     }
 }
 
-my $juno = Juno->new(
-    hosts  => ['A', 'B'],
-    checks => {
-        TestCheckZd7DD => {
-            on_success => sub { 'success!' },
-            on_fail    => sub { 'fail!'    },
-            on_result  => sub { 'result!'  },
+{
+    my $juno = Juno->new(
+        hosts    => ['A', 'B'],
+        interval => 30,
+        checks   => {
+            TestCheckZd7DD => {
+                on_success => sub { 'success!' },
+                on_fail    => sub { 'fail!'    },
+                on_result  => sub { 'result!'  },
+            },
         },
-    },
-);
+    );
 
-isa_ok( $juno, 'Juno' );
+    isa_ok( $juno, 'Juno' );
 
-$juno->run;
+    $juno->run;
+}
 
-$juno = Juno->new(
-    hosts  => ['A', 'B'],
-    checks => {
-        TestCheckF7A23 => {
-            hosts => ['C', 'D'],
+{
+    my $juno = Juno->new(
+        hosts  => ['A', 'B'],
+        checks => {
+            TestCheckF7A23 => {
+                hosts    => ['C', 'D'],
+                interval => 40,
+            },
         },
-    },
-);
+    );
 
-isa_ok( $juno, 'Juno' );
-$juno->run;
+    isa_ok( $juno, 'Juno' );
+
+    $juno->run;
+}
