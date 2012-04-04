@@ -6,6 +6,23 @@ package Juno::Role::Check;
 use Any::Moose 'Role';
 use namespace::autoclean;
 
+has on_success => (
+    is        => 'ro',
+    isa       => 'CodeRef',
+    predicate => 'has_on_success',
+);
+
+has on_fail => (
+    is        => 'ro',
+    isa       => 'CodeRef',
+    predicate => 'has_on_fail',
+);
+
+has on_result => (
+    is        => 'ro',
+    isa       => 'CodeRef',
+    predicate => 'has_on_result',
+);
 
 
 
