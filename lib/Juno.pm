@@ -19,6 +19,14 @@ has interval => (
     default => 10,
 );
 
+has prop_attributes => (
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
+    default => sub { [
+        qw/hosts interval/
+    ] },
+);
+
 has checks => (
     is       => 'ro',
     isa      => 'HashRef[HashRef]',
@@ -42,7 +50,7 @@ sub _build_check_objects {
 
         my %check_data = %{ $checks{$check} };
 
-        foreach my $prop_key ( qw/ hosts interval / ) {
+        foreach my $prop_key ( @{ $self->prop_attributes } ) {
             exists $check_data{$prop_key}
                 or $check_data{$prop_key} = $self->$prop_key;
         }
@@ -102,6 +110,16 @@ This helps you write stuff like monitoring services.
 
 =head1 ATTRIBUTES
 
+=head2 hosts
+
+An arrayref of hosts you want all checks to monitor.
+
+=head2 interval
+
+The interval for every check.
+
+Default: 10 seconds.
+
 =head2 checks
 
 The checks you want to run.
@@ -109,13 +127,12 @@ The checks you want to run.
 This is a hashref of the checks. The key is the check itself (correlates to the
 class in C<Juno::Check::>) and the values are the attributes to that check.
 
-=head2 hosts
+=head2 prop_attributes
 
-An arrayref hosts you want all checks to monitor.
+An arrayref of attributes that should be propagated from the main object to
+the checks.
 
-=head2 interval
-
-The interval for every check.
+Default: hosts, interval.
 
 =head1 METHODS
 
