@@ -159,7 +159,7 @@ the request.
 
 =head2 watcher
 
-Holds the watcher for the HTTP test.
+Holds the watcher for the HTTP check timer.
 
 This attribute derives from L<Juno::Role::Check>.
 
