@@ -38,8 +38,9 @@ has on_result => (
 );
 
 has watcher => (
-    is     => 'ro',
-    writer => 'set_watcher',
+    is      => 'ro',
+    writer  => 'set_watcher',
+    clearer => 'clear_watcher',
 );
 
 requires 'check';
