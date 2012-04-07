@@ -1,7 +1,10 @@
 Stuff to test further:
 - watcher clearer method (clear_watcher)
 - on_before callback
+- FPing
 
 Document:
 - all the callback parameters
 
+Fixes:
+- FPing should use System::Command
