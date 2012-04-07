@@ -29,6 +29,9 @@ sub check {
     foreach my $host (@hosts) {
         my $url  = "http://$host" . $path;
 
+        $self->has_on_before
+            and $self->on_before( $self, $host );
+
         http_get $url, $self->headers, sub {
             my ( $body, $headers ) = @_;
 
@@ -123,6 +126,36 @@ A coderef to run when getting a response - any response. This is what you use
 in case you want more control over what's going on.
 
 This attribute derives from L<Juno::Role::Check>.
+
+=head2 on_before
+
+A coderef to run before making a request. A useful example of this is timing
+the request.
+
+    use Juno;
+    use AnyEvent;
+
+    my $cv   = AnyEvent->condvar;
+    my %time = (
+        tom => AnyEvent->now,
+    );
+
+    my $juno = Juno->new(
+        checks => {
+            HTTP => {
+                on_before => sub {
+                    my $host = $_[1];
+                    $time{$host} = AnyEvent->now;
+                },
+
+                on_result => sub {
+                    my $host = $_[1];
+                    my $time = AnyEvent->now - $time{'tom'};
+                    print "It took $time to run the request to $host\n";
+                },
+            },
+        },
+    );
 
 =head2 watcher
 
