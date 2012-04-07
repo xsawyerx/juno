@@ -19,6 +19,12 @@ has interval => (
     default => 10,
 );
 
+has on_before => (
+    is        => 'ro',
+    isa       => 'CodeRef',
+    predicate => 'has_on_before',
+);
+
 has on_success => (
     is        => 'ro',
     isa       => 'CodeRef',
@@ -76,6 +82,10 @@ Custom per-check hosts list.
 =head2 interval
 
 Custom per-check interval.
+
+=head2 on_before
+
+A callback for before an action occurs.
 
 =head2 on_success
 
