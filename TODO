@@ -1,0 +1,6 @@
+Stuff to test further:
+- watcher clearer method (clear_watcher)
+
+Features:
+- Per-check before_cb callback? (on_before?)
+
