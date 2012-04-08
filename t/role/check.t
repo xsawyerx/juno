@@ -40,7 +40,7 @@ use AnyEvent;
         );
 
         is(
-            $self->on_result->(),
+            $self->on_result->($self),
             'result!',
             'Correct on_result',
         );
@@ -57,6 +57,8 @@ use AnyEvent;
             30,
             'Interval provided by Juno.pm',
         );
+
+        $self->clear_watcher;
     }
 }
 
@@ -86,6 +88,8 @@ use AnyEvent;
             40,
             'Interval was overwritten',
         );
+
+        $self->clear_watcher;
     }
 }
 
@@ -118,7 +122,10 @@ use AnyEvent;
             TestCheckZd7DD => {
                 on_success => sub { 'success!' },
                 on_fail    => sub { 'fail!'    },
-                on_result  => sub { 'result!'  },
+                on_result  => sub {
+                    shift->clear_watcher;
+                    'result!';
+                },
             },
         },
     );
@@ -159,7 +166,10 @@ use AnyEvent;
                     isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
                     is( $msg, 'finished', 'Got correct msg' );
 
-                    $self->count() == 2 and $cv->send;
+                    if ( $self->count == 2 ) {
+                        $self->clear_watcher;
+                        $cv->send;
+                    }
                 },
             },
         },
@@ -171,4 +181,15 @@ use AnyEvent;
 
     $cv->recv;
 }
+
+my $cv    = AnyEvent->condvar;
+my $w; $w = AnyEvent->timer(
+    after => 3,
+    cb    => sub {
+        undef $w;
+        $cv->send;
+    },
+);
+
+$cv->recv;
 
