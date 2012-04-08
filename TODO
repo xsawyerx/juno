@@ -1,6 +1,6 @@
 Stuff to test further:
-- watcher clearer method (clear_watcher)
 - on_before callback
+- all the callbacks (better checking)
 - FPing
 
 Document:
