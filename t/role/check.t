@@ -9,8 +9,6 @@ use Test::Fatal;
 use Juno;
 use AnyEvent;
 
-my $count = 0;
-
 # this will help us test the majority of things
 {
     package Juno::Check::TestCheckZd7DD;
@@ -98,12 +96,14 @@ my $count = 0;
     use Test::More;
     with 'Juno::Role::Check';
 
+    has count => ( is => 'rw', default => 0 );
+
     sub check {
         my $self = shift;
         isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
         ok( $self->does('Juno::Role::Check'), 'Does check role' );
 
-        $count++;
+        $self->count( $self->count() + 1 );
 
         $self->on_success->( $self, 'finished' );
     }
@@ -159,7 +159,7 @@ my $count = 0;
                     isa_ok( $self, 'Juno::Check::TestCheckFzVS33' );
                     is( $msg, 'finished', 'Got correct msg' );
 
-                    $count == 2 and $cv->send;
+                    $self->count() == 2 and $cv->send;
                 },
             },
         },
