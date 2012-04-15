@@ -35,8 +35,8 @@ sub check {
 
         fork_call {
             chomp ( my $return = `$cmd $host 2>&1` );
-            $self->has_on_result and $self->on_result( $self, $host, $result );
-            return $result;
+            $self->has_on_result and $self->on_result( $self, $host, $return );
+            return $return;
         } sub {
             $self->analyze_ping_result( @_, $host )
         };
@@ -153,4 +153,3 @@ L<Juno> will call this method for you. You should not call it yourself.
 =head2 run
 
 L<Juno> will call this method for you. You should not call it yourself.
-
