@@ -5,7 +5,6 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-use Juno::Check::SNMP;
 
 {
     local $@ = undef;
@@ -16,6 +15,12 @@ use Juno::Check::SNMP;
 {
     local $@ = undef;
     eval 'use AnyEvent::SNMP';
+    $@ and plan skip_all => 'AnyEvent::SNMP is required for this test';
+}
+
+{
+    local $@ = undef;
+    eval 'use Juno::Check::SNMP';
     $@ and plan skip_all => 'AnyEvent::SNMP is required for this test';
 }
 
@@ -66,4 +71,3 @@ my $juno = Juno::Check::SNMP->new(
 isa_ok( $juno, 'Juno::Check::SNMP' );
 isa_ok( $juno->session, 'Net::SNMP' );
 is( $juno->session->hostname, 'localhost', 'hostname passed to SNMP session' );
-
