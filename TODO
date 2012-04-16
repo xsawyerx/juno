@@ -9,4 +9,4 @@ Document:
 Fixes:
 - FPing should use System::Command
 - FPing might just be a subclass of RawCommand?
-- SNMP should use host, not hostname?
+- SNMP should use hosts provided by the role.
