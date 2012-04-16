@@ -10,11 +10,6 @@ with 'Juno::Role::Check';
 
 BEGIN {
     {
-        eval 'use version';
-        $@ and croak 'version is required for this check';
-    }
-
-    {
         eval 'use AnyEvent::SNMP';
         $@ and croak 'AnyEvent::SNMP is required for this check';
     }
@@ -23,10 +18,6 @@ BEGIN {
         eval 'use Net::SNMP';
         $@ and croak 'Net::SNMP is required for this check';
     }
-
-    my $version = Net::SNMP->VERSION;
-    $version > version::qv('v5.2.0')
-        and croak "Net::SNMP $version is incompatible, only v5.2.0 or less";
 };
 
 has hostname => (
