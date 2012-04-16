@@ -101,13 +101,13 @@ An arrayref of hosts to check, overriding the default given to Juno.pm.
     my $juno = Juno->new(
         hosts  => [ 'Tom', 'Jerry' ],
         checks => {
-            Ping => {
+            FPing => {
                 hosts => [ 'Micky', 'Mini' ], # this overrides tom and jerry
             },
         },
     );
 
-Now the Ping check will not check Tom and Jerry, but rather Micky and Mini.
+Now the FPing check will not check Tom and Jerry, but rather Micky and Mini.
 
 This attribute derives from L<Juno::Role::Check>.
 
@@ -142,7 +142,7 @@ A coderef to run before making a request.
 
 =head2 watcher
 
-Holds the watcher for the Ping check timer.
+Holds the watcher for the FPing check timer.
 
 This attribute derives from L<Juno::Role::Check>.
 
