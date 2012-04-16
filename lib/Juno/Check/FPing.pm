@@ -35,9 +35,11 @@ sub check {
 
         fork_call {
             chomp ( my $return = `$cmd $host 2>&1` );
-            $self->has_on_result and $self->on_result( $self, $host, $result );
             return $result;
         } sub {
+            $self->has_on_result
+                and $self->on_result->( $self, $host, $result );
+
             $self->analyze_ping_result( @_, $host )
         };
     }
@@ -77,7 +79,7 @@ sub analyze_ping_result {
         return;
     }
 
-    $self->has_on_fail and $self->on_fail( $self, $host, $timing );
+    $self->has_on_fail and $self->on_fail->( $self, $host, $timing );
 
     return 0;
 }
