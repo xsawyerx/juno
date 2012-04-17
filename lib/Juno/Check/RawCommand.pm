@@ -104,14 +104,16 @@ An arrayref of hosts to check, overriding the default given to Juno.pm.
                     my ( $check, $host, $cmd ) = @_;
 
                     print "Found $host in log.txt:\n"
-                        . $cmd->stdout;
+                        . $cmd->{'stdout'};
                 },
 
                 on_fail    => sub {
-                    my ( $check, $host, $cmd ) = @_;
+                    my ( $check, $host, $cmd, $msg ) = @_;
+
+                    $msg and print "Deserialization failed, odd error: $msg\n";
 
                     print "Failed to find $host in log.txt:\n"
-                        . $cmd->stderr;
+                        . $cmd->{'stderr'};
                 },
             },
         },
