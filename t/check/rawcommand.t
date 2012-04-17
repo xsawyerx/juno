@@ -48,7 +48,10 @@ my $check = Juno::Check::RawCommand->new(
         return bless {}, $class;
     };
 
-    *System::Command::exit = sub {0}
+    *System::Command::exit = sub {0};
+
+    # appease System::Command
+    *System::Command::_reap = sub {0};
 }
 
 isa_ok( $check, 'Juno::Check::RawCommand' );

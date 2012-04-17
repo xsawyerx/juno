@@ -3,7 +3,9 @@ use warnings;
 package Juno::Check::RawCommand;
 # ABSTRACT: A raw command checker for Juno
 
+use JSON;
 use Carp;
+use Try::Tiny;
 use AnyEvent::Util 'fork_call';
 use System::Command;
 
@@ -19,27 +21,41 @@ has cmd => (
 );
 
 sub check {
-    my $self  = shift;
-    my $cmd   = $self->cmd;
-    my @hosts = @{ $self->hosts };
+    my $self    = shift;
+    my $cmdattr = $self->cmd;
+    my @hosts   = @{ $self->hosts };
 
     foreach my $host (@hosts) {
-        $self->has_on_before and $self->on_before( $self, $host );
+        $self->has_on_before and $self->on_before->( $self, $host );
 
         fork_call {
-            my $run = sprintf $cmd, $host;
-            my $res = System::Command->new($run);
-            return $res;
-        } sub {
-            my $res = shift;
-            $self->has_on_result and $self->on_result->( $self, $host, $res );
+            my $run = sprintf $cmdattr, $host;
+            my $cmd = System::Command->new($run);
+            $cmd->close;
 
-            if ( $res->exit == 0 ) {
+            # serialize
+            return encode_json {
+                map { $_ => $cmd->$_ } qw/exit stdout stderr/
+            };
+        } sub {
+            # deserialize
+            my $serialized = shift;
+            my $data       = '';
+
+            try   { $data = decode_json $serialized }
+            catch {
+                $self->on_fail
+                    and $self->on_fail->( $self, $host, $serialized, $_ );
+            };
+
+            $self->has_on_result and $self->on_result->( $self, $host, $data );
+
+            if ( $data->{'exit'} == 0 ) {
                 $self->has_on_success
-                    and $self->on_success->( $self, $host, $res );
+                    and $self->on_success->( $self, $host, $data );
             } else {
                 $self->has_on_fail
-                    and $self->on_fail->( $self, $host, $res );
+                    and $self->on_fail->( $self, $host, $data );
             }
         };
     }
