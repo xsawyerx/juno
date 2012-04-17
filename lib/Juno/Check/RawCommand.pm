@@ -29,14 +29,23 @@ sub check {
         $self->has_on_before and $self->on_before->( $self, $host );
 
         fork_call {
-            my $run = sprintf $cmdattr, $host;
-            my $cmd = System::Command->new($run);
+            my $run      = sprintf $cmdattr, $host;
+            my $cmd      = System::Command->new($run);
+            my $stdoutfh = $cmd->stdout;
+            my $stderrfh = $cmd->stderr;
+            my $stdout   = do { local $/ = undef; <$stdoutfh>; };
+            my $stderr   = do { local $/ = undef; <$stderrfh>; };
+
             $cmd->close;
 
             # serialize
-            return encode_json {
-                map { $_ => $cmd->$_ } qw/exit stdout stderr/
+            my $data = {
+                exit   => $cmd->exit,
+                stdout => $stdout,
+                stderr => $stderr,
             };
+
+            return encode_json $data;
         } sub {
             # deserialize
             my $serialized = shift;
