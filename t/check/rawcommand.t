@@ -8,6 +8,7 @@ use Test::More;
 use Test::Fork;
 use Test::Fatal;
 use Juno::Check::RawCommand;
+use File::Temp 'tempfile';
 
 {
     local $@ = undef;
@@ -46,6 +47,16 @@ my $check = Juno::Check::RawCommand->new(
         is( $run,   'pick thedude',    'Command template works' );
 
         return bless {}, $class;
+    };
+
+    *System::Command::stdout = sub {
+        my ( $fh, $file ) = tempfile;
+        return $fh;
+    };
+
+    *System::Command::stderr = sub {
+        my ( $fh, $file ) = tempfile;
+        return $fh;
     };
 
     *System::Command::exit = sub {0};
