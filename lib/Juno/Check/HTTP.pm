@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Juno::Check::HTTP;
-# ABSTRACT: An HTTP checker for Juno
+# ABSTRACT: An HTTP check for Juno
 
 use AnyEvent::HTTP;
 use Any::Moose;

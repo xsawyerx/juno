@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Juno::Check::SNMP;
+# ABSTRACT: an SNMP check for Juno
 
 use Carp;
 use Any::Moose;

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Juno::Check::RawCommand;
-# ABSTRACT: A raw command checker for Juno
+# ABSTRACT: A raw command check for Juno
 
 use JSON;
 use Carp;

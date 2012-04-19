@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Juno::Check::FPing;
-# ABSTRACT: An FPing checker for Juno
+# ABSTRACT: An FPing check for Juno
 
 use Carp;
 use AnyEvent::Util 'fork_call';
