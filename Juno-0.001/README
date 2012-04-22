@@ -1,0 +1,72 @@
+NAME
+    Juno - Asynchronous event-driven checking mechanism
+
+VERSION
+    version 0.001
+
+SYNOPSIS
+    This runs an asynchronous checker on two servers (*jack* and *jill*),
+    running an HTTP test every 10 seconds with an additional *Host* header.
+
+        my $juno = Juno->new(
+            hosts    => [ 'jack', 'jill' ],
+            interval => 10,
+            checks   => {
+                HTTP => {
+                    headers => {
+                        [ 'Host', 'example.com' ],
+                    },
+
+                    on_result => sub {
+                        my $result = shift;
+                        ...
+                    },
+                },
+            },
+        );
+
+        # makes juno run in the background
+        $juno->run;
+
+DESCRIPTION
+    Juno is a hub of checking methods (HTTP, Ping, SNMP, etc.) meant to
+    provide developers with an asynchronous event-based checking agent that
+    returns results you can then use as probed data.
+
+    This helps you write stuff like monitoring services.
+
+ATTRIBUTES
+  hosts
+    An arrayref of hosts you want all checks to monitor.
+
+  interval
+    The interval for every check.
+
+    Default: 10 seconds.
+
+  checks
+    The checks you want to run.
+
+    This is a hashref of the checks. The key is the check itself (correlates
+    to the class in "Juno::Check::") and the values are the attributes to
+    that check.
+
+  prop_attributes
+    An arrayref of attributes that should be propagated from the main object
+    to the checks.
+
+    Default: hosts, interval.
+
+METHODS
+  run
+    Run Juno.
+
+AUTHOR
+    Sawyer X <xsawyerx@cpan.org>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2012 by Sawyer X.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
