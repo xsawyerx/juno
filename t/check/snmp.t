@@ -23,21 +23,21 @@ eval 'use Juno::Check::SNMP';
 plan tests => 7;
 
 like(
-    exception { 
+    exception {
         Juno::Check::SNMP->new(
             community   => 'b',
             version     => 2,
             oid         => 'stuff2'
-        ); 
+        );
     },
     qr/^\QAttribute (hostname) is required\E/,
     'Attribute hostname required',
 );
 
 like(
-    exception { 
-        Juno::Check::SNMP->new( 
-            hostname => 'a'
+    exception {
+        Juno::Check::SNMP->new(
+            hostname => 'a',
             version  => 2,
             oid      => 'stuff2',
         );
@@ -80,4 +80,3 @@ my $juno = Juno::Check::SNMP->new(
 isa_ok( $juno, 'Juno::Check::SNMP' );
 isa_ok( $juno->session, 'Net::SNMP' );
 is( $juno->session->hostname, 'localhost', 'hostname passed to SNMP session' );
-
