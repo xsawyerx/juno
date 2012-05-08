@@ -27,13 +27,25 @@ use Test::Fatal;
 plan tests => 7;
 
 like(
-    exception { Juno::Check::SNMP->new },
+    exception {
+        Juno::Check::SNMP->new(
+            community   => 'b',
+            version     => 2,
+            oid         => 'stuff2'
+        );
+    },
     qr/^\QAttribute (hostname) is required\E/,
     'Attribute hostname required',
 );
 
 like(
-    exception { Juno::Check::SNMP->new( hostname => 'a' ) },
+    exception {
+        Juno::Check::SNMP->new(
+            hostname => 'a',
+            version  => 2,
+            oid      => 'stuff2',
+        );
+    },
     qr/^\QAttribute (community) is required\E/,
     'Attribute community required',
 );
@@ -43,6 +55,7 @@ like(
         Juno::Check::SNMP->new(
             hostname  => 'a',
             community => 'b',
+            oid       => 'stuff2',
         );
     },
     qr/^\QAttribute (version) is required\E/,

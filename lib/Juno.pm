@@ -36,6 +36,7 @@ has checks => (
 has check_objects => (
     is      => 'ro',
     isa     => 'ArrayRef',
+    lazy    => 1,
     builder => '_build_check_objects',
 );
 

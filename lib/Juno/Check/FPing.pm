@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 package Juno::Check::FPing;
-# ABSTRACT: An FPing checker for Juno
+# ABSTRACT: An FPing check for Juno
 
 use Carp;
 use AnyEvent::Util 'fork_call';
 use Any::Moose;
 use namespace::autoclean;
 
-with 'Juno::Role::Check';
+extends 'Juno::Check::RawCommand';
 
 has count => (
     is      => 'ro',
@@ -16,39 +16,17 @@ has count => (
     default => 3,
 );
 
-has cmd => (
-    is      => 'ro',
-    isa     => 'Str',
+has '+cmd' => (
     default => sub {
-        my $self = shift;
-        return '/usr/sbin/fping -A -q -c ' . $self->count;
+        my $self  = shift;
+        my $count = $self->count;
+        return '/usr/sbin/fping -A -q -c $count %s';
     },
 );
-
-sub check {
-    my $self  = shift;
-    my $cmd   = $self->cmd;
-    my @hosts = @{ $self->hosts };
-
-    foreach my $host (@hosts) {
-        $self->has_on_before and $self->on_before( $self, $host );
-
-        fork_call {
-            chomp ( my $return = `$cmd $host 2>&1` );
-            $self->has_on_result and $self->on_result( $self, $host, $return );
-            return $return;
-        } sub {
-            $self->analyze_ping_result( @_, $host )
-        };
-    }
-
-    return 0;
-}
 
 sub analyze_ping_result {
     my $self   = shift;
     my $timing = shift;
-    my $host   = shift;
     my $regex1 = qr{
         # 1.1.1.1 : xmt/rcv/%loss = 5/5/0%, min/avg/max = 235/379/602
         ^                                        # start
@@ -61,23 +39,14 @@ sub analyze_ping_result {
     }x;
 
     if ( ! defined $timing or $timing eq '' ) {
-        $self->has_on_fail and $self->on_fail->( $self, $host );
         return;
     }
 
     if ( $timing =~ $regex1 ) {
         my ( $ip, $loss, $average ) = ( $1, $2, $3 );
 
-        $host eq $ip
-            or carp "Mismatched FPing result, host doesn't match IP\n";
-
-        $self->has_on_success
-            and $self->on_success->( $self, $host, $timing, $loss, $average );
-
-        return;
+        return ( $timing, $loss, $average );
     }
-
-    $self->has_on_fail and $self->on_fail( $self, $host, $timing );
 
     return 0;
 }
@@ -99,13 +68,13 @@ An arrayref of hosts to check, overriding the default given to Juno.pm.
     my $juno = Juno->new(
         hosts  => [ 'Tom', 'Jerry' ],
         checks => {
-            Ping => {
+            FPing => {
                 hosts => [ 'Micky', 'Mini' ], # this overrides tom and jerry
             },
         },
     );
 
-Now the Ping check will not check Tom and Jerry, but rather Micky and Mini.
+Now the FPing check will not check Tom and Jerry, but rather Micky and Mini.
 
 This attribute derives from L<Juno::Role::Check>.
 
@@ -140,11 +109,15 @@ A coderef to run before making a request.
 
 =head2 watcher
 
-Holds the watcher for the Ping check timer.
+Holds the watcher for the FPing check timer.
 
 This attribute derives from L<Juno::Role::Check>.
 
 =head1 METHODS
+
+=head2 analyze_fping(TIMING)
+
+Analyzes the fping results, returns timing, packet loss and average.
 
 =head2 check
 

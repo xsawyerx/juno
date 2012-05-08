@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Juno::Check::SNMP;
+# ABSTRACT: an SNMP check for Juno
 
 use Carp;
 use Any::Moose;
@@ -10,11 +11,6 @@ with 'Juno::Role::Check';
 
 BEGIN {
     {
-        eval 'use version';
-        $@ and croak 'version is required for this check';
-    }
-
-    {
         eval 'use AnyEvent::SNMP';
         $@ and croak 'AnyEvent::SNMP is required for this check';
     }
@@ -23,10 +19,6 @@ BEGIN {
         eval 'use Net::SNMP';
         $@ and croak 'Net::SNMP is required for this check';
     }
-
-    my $version = Net::SNMP->VERSION;
-    $version > version::qv('v5.2.0')
-        and croak "Net::SNMP $version is incompatible, only v5.2.0 or less";
 };
 
 has hostname => (
@@ -78,7 +70,7 @@ sub check {
     my $self = shift;
 
     $self->has_on_before
-        and $self->on_before($self);
+        and $self->on_before->($self);
 
     $self->session->get_request(
         -varbindlist    => [ $self->oid ],
