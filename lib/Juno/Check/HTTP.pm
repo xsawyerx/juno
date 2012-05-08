@@ -30,7 +30,7 @@ sub check {
         my $url  = "http://$host" . $path;
 
         $self->has_on_before
-            and $self->on_before( $self, $host );
+            and $self->on_before->( $self, $host );
 
         http_get $url, $self->headers, sub {
             my ( $body, $headers ) = @_;

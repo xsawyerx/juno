@@ -70,7 +70,7 @@ sub check {
     my $self = shift;
 
     $self->has_on_before
-        and $self->on_before($self);
+        and $self->on_before->($self);
 
     $self->session->get_request(
         -varbindlist    => [ $self->oid ],
