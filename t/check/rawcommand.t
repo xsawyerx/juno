@@ -33,7 +33,7 @@ is(
 my $cv    = AnyEvent->condvar;
 my $check = Juno::Check::RawCommand->new(
     hosts     => ['thedude'],
-    cmd        => 'pick %s',
+    cmd        => 'pick %h',
     on_success => sub { $cv->send },
 );
 
