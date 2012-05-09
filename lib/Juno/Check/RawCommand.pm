@@ -38,6 +38,8 @@ sub check {
             my $stdout   = do { local $/ = undef; <$stdoutfh>; };
             my $stderr   = do { local $/ = undef; <$stderrfh>; };
 
+            chomp ( $stdout, $stderr );
+
             $cmd->close;
 
             # serialize
