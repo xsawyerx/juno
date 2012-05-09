@@ -29,7 +29,9 @@ sub check {
         $self->has_on_before and $self->on_before->( $self, $host );
 
         fork_call {
-            my $run      = sprintf $cmdattr, $host;
+            my $run = $cmdattr;
+            $run =~ s/%h/$host/g;
+
             my $cmd      = System::Command->new($run);
             my $stdoutfh = $cmd->stdout;
             my $stderrfh = $cmd->stderr;
@@ -89,7 +91,7 @@ command (stdout, stderr, exit code, etc.).
 =head2 cmd
 
 The command to run. This allows a B<very> simple template that allows you to
-use C<%s> as the host, but only once.
+use C<%h> as the host.
 
 =head2 hosts
 
@@ -99,11 +101,11 @@ An arrayref of hosts to check, overriding the default given to Juno.pm.
         checks => {
             RawCommand => {
                 hosts      => ['Jeff'],
-                cmd        => 'grep %s log.txt', # %s will be the host
+                cmd        => 'grep %h %h.log', # %h will be the host
                 on_success => sub {
                     my ( $check, $host, $cmd ) = @_;
 
-                    print "Found $host in log.txt:\n"
+                    print "Found $host in $host.log\n"
                         . $cmd->{'stdout'};
                 },
 
