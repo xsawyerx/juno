@@ -1,5 +1,9 @@
 Revision history for Perl extension Juno
 
+0.002   12.07.12
+        * Adding TCP (reported by Tal Fishler).
+        * Small fixes.
+
 0.001   22.04.12
         * First release of Juno, a Perl general purpose checker.
 
