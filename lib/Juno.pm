@@ -87,7 +87,7 @@ an HTTP test every 10 seconds with an additional I<Host> header.
         checks   => {
             HTTP => {
                 headers => {
-                    [ 'Host', 'example.com' ],
+                    { 'Host', 'example.com' },
                 },
 
                 on_result => sub {
