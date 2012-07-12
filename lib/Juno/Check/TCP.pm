@@ -27,6 +27,10 @@ sub check {
         tcp_connect $host, $port, sub {
             my ($fh) = @_;
 
+            if ( $self->has_on_result ) {
+                $self->on_result->( $self, $fh );
+            }
+
             if ( ! defined $fh ) {
                 my $error = $!;
 
