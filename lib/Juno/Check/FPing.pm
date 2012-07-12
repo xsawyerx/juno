@@ -20,7 +20,7 @@ has '+cmd' => (
     default => sub {
         my $self  = shift;
         my $count = $self->count;
-        return 'fping -A -q -c $count %s';
+        return "fping -A -q -c $count \%h";
     },
 );
 
