@@ -7,6 +7,8 @@ use Class::Load 'load_class';
 use Any::Moose;
 use namespace::autoclean;
 
+with 'MooseX::Role::Loggable';
+
 has hosts => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
@@ -56,7 +58,7 @@ sub _build_check_objects {
                 or $check_data{$prop_key} = $self->$prop_key;
         }
 
-        push @checks, $class->new(%check_data);
+        push @checks, $class->new( %check_data, $self->log_fields );
     }
 
     return \@checks;
@@ -66,6 +68,7 @@ sub run {
     my $self = shift;
 
     foreach my $check ( @{ $self->check_objects } ) {
+        $self->log( 'Running', ref $check );
         $check->run();
     }
 }

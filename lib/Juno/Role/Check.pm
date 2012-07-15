@@ -7,6 +7,8 @@ use AnyEvent;
 use Any::Moose 'Role';
 use namespace::autoclean;
 
+with 'MooseX::Role::Loggable';
+
 has hosts => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
