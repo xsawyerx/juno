@@ -1,5 +1,8 @@
 Revision history for Perl extension Juno
 
+0.004   15.07.12
+        * Add MooseX::Role::Loggable.
+
 0.003   12.07.12
         * Fix interpolation in FPing's fping command.
         * Add on_result support for TCP check.
