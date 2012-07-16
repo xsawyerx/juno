@@ -45,7 +45,7 @@ sub analyze_ping_result {
     if ( $timing =~ $regex1 ) {
         my ( $ip, $loss, $average ) = ( $1, $2, $3 );
 
-        return ( $timing, $loss, $average );
+        return ( $ip, $loss, $average );
     }
 
     return 0;
