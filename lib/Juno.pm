@@ -21,11 +21,17 @@ has interval => (
     default => 10,
 );
 
+has after => (
+    is      => 'ro',
+    isa     => 'Num',
+    default => 0,
+);
+
 has prop_attributes => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
     default => sub { [
-        qw/hosts interval/
+        qw/hosts interval after/
     ] },
 );
 
@@ -123,6 +129,12 @@ An arrayref of hosts you want all checks to monitor.
 The interval for every check.
 
 Default: 10 seconds.
+
+=head2 after
+
+delay seconds for first check.
+
+Default: 0 second
 
 =head2 checks
 
