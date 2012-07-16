@@ -17,7 +17,7 @@ has hosts => (
 
 has interval => (
     is      => 'ro',
-    isa     => 'Int',
+    isa     => 'Num',
     default => 10,
 );
 
