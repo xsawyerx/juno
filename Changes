@@ -1,5 +1,9 @@
 Revision history for Perl extension Juno
 
+0.005   16.07.12
+        * Adding "after" timer attribute (Fayland Lam).
+        * Change "interval" timer attribute from Int to Num (Fayland Lam).
+
 0.004   15.07.12
         * Add MooseX::Role::Loggable.
 

@@ -6,7 +6,7 @@ Juno - Asynchronous event-driven checking mechanism
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 
@@ -52,6 +52,12 @@ An arrayref of hosts you want all checks to monitor.
 The interval for every check.
 
 Default: 10 seconds.
+
+=head2 after
+
+delay seconds for first check.
+
+Default: 0 second
 
 =head2 checks
 
