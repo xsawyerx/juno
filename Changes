@@ -1,5 +1,8 @@
 Revision history for Perl extension Juno
 
+0.006   18.07.12
+        * FPing.pm's analyze_ping_result returns the IP found.
+
 0.005   16.07.12
         * Adding "after" timer attribute (Fayland Lam).
         * Change "interval" timer attribute from Int to Num (Fayland Lam).
