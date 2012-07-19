@@ -63,6 +63,8 @@ sub check {
 
             $self->has_on_result and $self->on_result->( $self, $host, $data );
 
+            $data or return;
+
             if ( $data->{'exit'} == 0 ) {
                 $self->has_on_success
                     and $self->on_success->( $self, $host, $data );
