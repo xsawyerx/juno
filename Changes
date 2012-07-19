@@ -1,5 +1,10 @@
 Revision history for Perl extension Juno
 
+0.007
+        * RawCommand's exit status was still checked even when we couldn't
+          deserialize it (or if it didn't exist). We return in case that
+          happens (on_fail and on_result will both still get called).
+
 0.006   18.07.12
         * FPing.pm's analyze_ping_result returns the IP found.
 
