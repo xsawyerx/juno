@@ -6,9 +6,7 @@ package Juno::Role::Check;
 use AnyEvent;
 use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Str Num CodeRef ArrayRef>;
-
-# FIXME: enable this when Moo fixes it
-#use namespace::autoclean;
+use namespace::autoclean;
 
 with 'MooseX::Role::Loggable';
 

@@ -5,10 +5,9 @@ package Juno;
 
 use Moo;
 use MooX::Types::MooseLike::Base qw<Str Num ArrayRef HashRef>;
+use Sub::Quote;
 use Class::Load 'load_class';
-
-# FIXME: enable this when Moo fixes it
-#use namespace::autoclean;
+use namespace::autoclean;
 
 with 'MooseX::Role::Loggable';
 

@@ -6,9 +6,7 @@ package Juno::Check::TCP;
 use Moo;
 use MooX::Types::MooseLike::Base qw<Int>;
 use AnyEvent::Socket;
-
-# FIXME: enable this when Moo fixes it
-#use namespace::autoclean;
+use namespace::autoclean;
 
 with 'Juno::Role::Check';
 

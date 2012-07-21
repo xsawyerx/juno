@@ -7,9 +7,7 @@ use Carp;
 use AnyEvent::Util 'fork_call';
 use Moo;
 use MooX::Types::MooseLike::Base qw<Int>;
-
-# FIXME: enable this once Moo fixes it
-#use namespace::autoclean;
+use namespace::autoclean;
 
 extends 'Juno::Check::RawCommand';
 
