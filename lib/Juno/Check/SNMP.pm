@@ -52,11 +52,9 @@ has oid => (
 has session => (
     is  => 'lazy',
     isa => quote_sub(q{
-        use Scalar::Util 'blessed';
-        blessed $_[0] && $_[0]->isa('Net::SNMP')
+        use Safe::Isa;
+        $_[0]->$_isa('Net::SNMP')
             or die "$_[0] must be Net::SNMP object";
-
-        return $_[0];
     }),
 );
 
