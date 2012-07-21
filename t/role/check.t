@@ -12,7 +12,7 @@ use AnyEvent;
 # this will help us test the majority of things
 {
     package Juno::Check::TestCheckZd7DD;
-    use Any::Moose;
+    use Moo;
     use Test::More;
     with 'Juno::Role::Check';
 
@@ -65,7 +65,7 @@ use AnyEvent;
 # this helps us check that attributes were overwritten
 {
     package Juno::Check::TestCheckF7A23;
-    use Any::Moose;
+    use Moo;
     use Test::More;
     with 'Juno::Role::Check';
 
@@ -96,11 +96,11 @@ use AnyEvent;
 # this helps us check that the check() method actually works
 {
     package Juno::Check::TestCheckFzVS33;
-    use Any::Moose;
+    use Moo;
     use Test::More;
     with 'Juno::Role::Check';
 
-    has count => ( is => 'rw', default => 0 );
+    has count => ( is => 'rw', default => sub {0} );
 
     sub check {
         my $self = shift;

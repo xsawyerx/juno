@@ -4,8 +4,12 @@ package Juno::Check::SNMP;
 # ABSTRACT: an SNMP check for Juno
 
 use Carp;
-use Any::Moose;
-use namespace::autoclean;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Str Int>;
+use Sub::Quote 'quote_sub';
+
+# FIXME: enable this when Moo fixes it
+#use namespace::autoclean;
 
 with 'Juno::Role::Check';
 
@@ -23,32 +27,37 @@ BEGIN {
 
 has hostname => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 
 has community => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1
 );
 
 has version => (
     is       => 'ro',
-    isa      => 'Int',
+    isa      => Int,
     required => 1
 );
 
 has oid => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1
 );
 
 has session => (
-    is         => 'ro',
-    isa        => 'Net::SNMP',
-    lazy_build => 1
+    is  => 'lazy',
+    isa => quote_sub(q{
+        use Scalar::Util 'blessed';
+        blessed $_[0] && $_[0]->isa('Net::SNMP')
+            or die "$_[0] must be Net::SNMP object";
+
+        return $_[0];
+    }),
 );
 
 sub _build_session {
@@ -80,7 +89,5 @@ sub check {
         },
     );
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;

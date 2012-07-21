@@ -4,20 +4,23 @@ package Juno::Check::HTTP;
 # ABSTRACT: An HTTP check for Juno
 
 use AnyEvent::HTTP;
-use Any::Moose;
-use namespace::autoclean;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Str HashRef>;
+
+# FIXME: enable this when Moo fixes it
+#use namespace::autoclean;
 
 with 'Juno::Role::Check';
 
 has path => (
     is      => 'ro',
-    isa     => 'Str',
-    default => '/',
+    isa     => Str,
+    default => sub {'/'},
 );
 
 has headers => (
     is      => 'ro',
-    isa     => 'HashRef',
+    isa     => HashRef,
     default => sub { {} },
 );
 
@@ -50,8 +53,6 @@ sub check {
 
     return 0;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

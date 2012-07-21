@@ -4,57 +4,61 @@ package Juno::Role::Check;
 # ABSTRACT: Check role for Juno
 
 use AnyEvent;
-use Any::Moose 'Role';
-use namespace::autoclean;
+use Moo::Role;
+use MooX::Types::MooseLike::Base qw<Str Num CodeRef ArrayRef>;
+
+# FIXME: enable this when Moo fixes it
+#use namespace::autoclean;
 
 with 'MooseX::Role::Loggable';
 
 has hosts => (
     is      => 'ro',
-    isa     => 'ArrayRef[Str]',
+    #isa     => ArrayRef[Str],
+    isa     => ArrayRef,
     default => sub { [] },
 );
 
 has interval => (
     is      => 'ro',
-    isa     => 'Num',
-    default => 10,
+    isa     => Num,
+    default => sub {10},
 );
 
 has after => (
     is      => 'ro',
-    isa     => 'Num',
-    default => 0,
+    isa     => Num,
+    default => sub {0},
 ); 
 
 has on_before => (
     is        => 'ro',
-    isa       => 'CodeRef',
-    predicate => 'has_on_before',
+    isa       => CodeRef,
+    predicate => 1,
 );
 
 has on_success => (
     is        => 'ro',
-    isa       => 'CodeRef',
-    predicate => 'has_on_success',
+    isa       => CodeRef,
+    predicate => 1,
 );
 
 has on_fail => (
     is        => 'ro',
-    isa       => 'CodeRef',
-    predicate => 'has_on_fail',
+    isa       => CodeRef,
+    predicate => 1,
 );
 
 has on_result => (
     is        => 'ro',
-    isa       => 'CodeRef',
-    predicate => 'has_on_result',
+    isa       => CodeRef,
+    predicate => 1,
 );
 
 has watcher => (
     is      => 'ro',
     writer  => 'set_watcher',
-    clearer => 'clear_watcher',
+    clearer => 1,
 );
 
 requires 'check';

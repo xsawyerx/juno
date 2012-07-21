@@ -3,15 +3,18 @@ use warnings;
 package Juno::Check::TCP;
 # ABSTRACT: A TCP check for Juno
 
-use Any::Moose;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Int>;
 use AnyEvent::Socket;
-use namespace::autoclean;
+
+# FIXME: enable this when Moo fixes it
+#use namespace::autoclean;
 
 with 'Juno::Role::Check';
 
 has port => (
     is       => 'ro',
-    isa      => 'Int',
+    isa      => Int,
     required => 1,
 );
 
@@ -48,8 +51,6 @@ sub check {
 
     return 0;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

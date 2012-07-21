@@ -5,15 +5,18 @@ package Juno::Check::FPing;
 
 use Carp;
 use AnyEvent::Util 'fork_call';
-use Any::Moose;
-use namespace::autoclean;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Int>;
+
+# FIXME: enable this once Moo fixes it
+#use namespace::autoclean;
 
 extends 'Juno::Check::RawCommand';
 
 has count => (
     is      => 'ro',
-    isa     => 'Int',
-    default => 3,
+    isa     => Int,
+    default => sub {3},
 );
 
 has '+cmd' => (
@@ -50,8 +53,6 @@ sub analyze_ping_result {
 
     return 0;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

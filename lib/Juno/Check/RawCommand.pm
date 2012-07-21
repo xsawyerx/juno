@@ -9,14 +9,17 @@ use Try::Tiny;
 use AnyEvent::Util 'fork_call';
 use System::Command;
 
-use Any::Moose;
-use namespace::autoclean;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Str>;
+
+# FIXME: enable this when Moo fixes it
+#use namespace::autoclean;
 
 with 'Juno::Role::Check';
 
 has cmd => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 
@@ -77,8 +80,6 @@ sub check {
 
     return 0;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 
