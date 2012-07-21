@@ -21,7 +21,7 @@ use Test::Fatal;
 {
     local $@ = undef;
     eval 'use Juno::Check::SNMP';
-    $@ and plan skip_all => 'AnyEvent::SNMP is required for this test';
+    $@ and plan skip_all => 'Juno::Check::SNMP is required for this test';
 }
 
 plan tests => 7;
