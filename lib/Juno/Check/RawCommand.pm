@@ -16,10 +16,15 @@ use namespace::autoclean;
 with 'Juno::Role::Check';
 
 has cmd => (
-    is       => 'lazy',
-    isa      => Str,
-    required => 1,
+    is        => 'lazy',
+    isa       => Str,
+    predicate => 'has_cmd',
 );
+
+sub BUILD {
+    my $self = shift;
+    $self->has_cmd or croak 'Missing required arguments: cmd';
+}
 
 sub check {
     my $self    = shift;
