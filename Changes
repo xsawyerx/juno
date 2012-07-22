@@ -1,6 +1,7 @@
 Revision history for Perl extension Juno
 
-0.007
+0.007   22.07.12
+        * Convert to Moo.
         * RawCommand's exit status was still checked even when we couldn't
           deserialize it (or if it didn't exist). We return in case that
           happens (on_fail and on_result will both still get called).
