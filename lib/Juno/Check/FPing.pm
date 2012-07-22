@@ -17,13 +17,11 @@ has count => (
     default => sub {3},
 );
 
-has '+cmd' => (
-    default => sub {
-        my $self  = shift;
-        my $count = $self->count;
-        return "fping -A -q -c $count \%h";
-    },
-);
+sub _build_cmd {
+    my $self  = shift;
+    my $count = $self->count;
+    return "fping -A -q -c $count \%h";
+}
 
 sub analyze_ping_result {
     my $self   = shift;

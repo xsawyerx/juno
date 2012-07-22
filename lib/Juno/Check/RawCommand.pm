@@ -16,7 +16,7 @@ use namespace::autoclean;
 with 'Juno::Role::Check';
 
 has cmd => (
-    is       => 'ro',
+    is       => 'lazy',
     isa      => Str,
     required => 1,
 );
