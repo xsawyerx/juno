@@ -11,6 +11,11 @@ use namespace::autoclean;
 
 extends 'Juno::Check::RawCommand';
 
+has '+cmd' => (
+    is      => 'lazy',
+    builder => '_build_cmd',
+);
+
 has count => (
     is      => 'ro',
     isa     => Int,
