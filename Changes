@@ -1,5 +1,9 @@
 Revision history for Perl extension Juno
 
+0.008   22.07.12
+        * Fixing lazy-yet-required attribute with subclassing that adds a
+          builder as well.
+
 0.007   22.07.12
         * Convert to Moo.
         * RawCommand's exit status was still checked even when we couldn't
