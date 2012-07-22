@@ -20,7 +20,7 @@ plan tests => 6;
 
 like(
     exception { Juno::Check::RawCommand->new },
-    qr/^\QAttribute (cmd) is required\E/,
+    qr/^\QMissing required arguments: cmd\E/,
     'Attribute cmd required',
 );
 

@@ -10,11 +10,12 @@ use Juno;
 
 {
     package Juno::Check::TestCheckZd7DD;
-    use Any::Moose;
+    use Moo;
+    use MooX::Types::MooseLike::Base qw<Str>;
     use Test::More;
     with 'Juno::Role::Check';
 
-    has testattr => ( is => 'ro', isa => 'Str' );
+    has testattr => ( is => 'ro', isa => Str );
 
     sub check {1}
 

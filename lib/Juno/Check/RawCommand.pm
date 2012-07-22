@@ -9,16 +9,22 @@ use Try::Tiny;
 use AnyEvent::Util 'fork_call';
 use System::Command;
 
-use Any::Moose;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Str>;
 use namespace::autoclean;
 
 with 'Juno::Role::Check';
 
 has cmd => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
+    is        => 'lazy',
+    isa       => Str,
+    predicate => 'has_cmd',
 );
+
+sub BUILD {
+    my $self = shift;
+    $self->has_cmd or croak 'Missing required arguments: cmd';
+}
 
 sub check {
     my $self    = shift;
@@ -77,8 +83,6 @@ sub check {
 
     return 0;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

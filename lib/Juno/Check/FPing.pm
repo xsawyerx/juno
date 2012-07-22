@@ -5,24 +5,23 @@ package Juno::Check::FPing;
 
 use Carp;
 use AnyEvent::Util 'fork_call';
-use Any::Moose;
+use Moo;
+use MooX::Types::MooseLike::Base qw<Int>;
 use namespace::autoclean;
 
 extends 'Juno::Check::RawCommand';
 
 has count => (
     is      => 'ro',
-    isa     => 'Int',
-    default => 3,
+    isa     => Int,
+    default => sub {3},
 );
 
-has '+cmd' => (
-    default => sub {
-        my $self  = shift;
-        my $count = $self->count;
-        return "fping -A -q -c $count \%h";
-    },
-);
+sub _build_cmd {
+    my $self  = shift;
+    my $count = $self->count;
+    return "fping -A -q -c $count \%h";
+}
 
 sub analyze_ping_result {
     my $self   = shift;
@@ -50,8 +49,6 @@ sub analyze_ping_result {
 
     return 0;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 
