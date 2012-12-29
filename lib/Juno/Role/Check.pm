@@ -12,7 +12,6 @@ with 'MooseX::Role::Loggable';
 
 has hosts => (
     is      => 'ro',
-    #isa     => ArrayRef[Str],
     isa     => ArrayRef,
     default => sub { [] },
 );
