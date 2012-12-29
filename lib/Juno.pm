@@ -77,7 +77,10 @@ sub _build_check_objects {
                 or $check_data{$prop_key} = $self->$prop_key;
         }
 
-        push @checks, $class->new( %check_data, $self->log_fields );
+        push @checks, $class->new(
+            %check_data,
+            logger => $self->logger,
+        );
     }
 
     return \@checks;
