@@ -1,9 +1,9 @@
 use strict;
 use warnings;
-package Juno::Check::DNS;
-# ABSTRACT: A DNS check for Juno
+package Juno::Check::Ping;
+# ABSTRACT: A Ping check for Juno
 
-use AnyEvent::DNS;
+use AnyEvent::Ping;
 use Moo;
 use MooX::Types::MooseLike::Base qw<Int Num Object>;
 use namespace::autoclean;
