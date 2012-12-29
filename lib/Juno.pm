@@ -13,8 +13,7 @@ with 'MooseX::Role::Loggable';
 
 has hosts => (
     is      => 'ro',
-    #isa     => ArrayRef[Str],
-    isa     => ArrayRef,
+    isa     => ArrayRef[Str],
     default => sub { [] },
 );
 
@@ -32,27 +31,13 @@ has after => (
 
 has prop_attributes => (
     is      => 'ro',
-    #isa     => ArrayRef[Str],
-    isa     => ArrayRef,
-    default => sub {
-        [ qw<hosts interval after> ]
-    },
+    isa     => ArrayRef[Str],
+    default => sub { [ qw<hosts interval after> ] },
 );
 
 has checks => (
     is       => 'ro',
-    #isa      => HashRef[HashRef], # GH #7 on MooX::Types::MooseLike
-    isa      => quote_sub(q!
-        my $hashref = ref({});
-        ref $_[0] && ref( $_[0] ) eq $hashref
-            or die "$_[0] must be a hashref";
-
-        foreach my $key ( keys %{ $_[0] } ) {
-            my $value = $_[0]->{$key};
-            ref $value and ref($value) eq $hashref
-                or die "$value is not a hashref";
-        }
-    !),
+    isa      => HashRef[HashRef],
     required => 1,
 );
 
