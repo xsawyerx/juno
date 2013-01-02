@@ -184,7 +184,7 @@ use AnyEvent;
 
 my $cv    = AnyEvent->condvar;
 my $w; $w = AnyEvent->timer(
-    after => 1,
+    after => 0.5,
     cb    => sub {
         undef $w;
         $cv->send;
