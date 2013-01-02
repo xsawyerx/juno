@@ -112,10 +112,70 @@ an HTTP test every 10 seconds with an additional I<Host> header.
 =head1 DESCRIPTION
 
 Juno is a hub of checking methods (HTTP, Ping, SNMP, etc.) meant to provide
-developers with an asynchronous event-based checking agent that returns
-results you can then use as probed data.
+developers with an asynchronous event-based checking agent that has callable
+events for the each check's result. You can then use this probed data for
+whatever it is you want.  This helps you write stuff like monitoring services,
+amongst other things.
 
-This helps you write stuff like monitoring services.
+Juno is flexible, introspective and composable but still very straight-forward.
+To use Juno, you simply need to create a new object, give it all the
+information needed (such as the test you want to run) and the optional
+(and possibly required) additional check-specific arguments, and then just let
+it run in the background, working for you.
+
+Each check Juno runs can have multiple events launched for it. The events will
+only be called if you ask them to be called. This means that if you do not
+want a certain event to run for a specific check, just don't provide it.
+
+=head1 EVENTS
+
+Let's go over the events you can run. Each check should provide all of these
+events unless specified otherwise in the check's documentation.
+
+Also, note that each check tried to decide if a result has been successful or
+not. This could be decided using return codes, response headers, failed
+results, etc. You have callbacks for successful results or not, but they do
+not prevent you from using the other callbacks provided. They will still work
+seamlessly if you provide all of them.
+
+=over 4
+
+=item * on_before
+
+This event gets called before the check is actually called.
+
+One thing you can do with it is to check how long a request takes. You can
+timestamp before a check is done, and once a check has a result, you can
+timestamp that again. The diff between those timestamps is how long it took
+to run the check.
+
+=item * on_result
+
+This event gets called as soon as a check result has come in. It might have
+failed, it might have been successful. It doesn't matter.
+
+One usage for it is to timestamp the result to correspond to the C<before>
+callback explained above.
+
+Another usage for it is in case you want to check for yourself if the result
+has been successful or not. Perhaps you have your own API you're testing
+against and you (and only I<you>) can decide if it was successful.
+
+You will receive the entire result and can make any decision you want.
+
+=item * on_success
+
+This callback is called when the check decides the result has succeeded.
+
+=item * on_fail
+
+This callback is called when the check decides the result has failed.
+
+=back
+
+Hopefully by now you understand the basic concepts of Juno. The following
+documentation will help you get started on how to use Juno exactly, creating
+a new object and providing it with all the information required.
 
 =head1 ATTRIBUTES
 
