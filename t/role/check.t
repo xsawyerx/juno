@@ -156,7 +156,7 @@ use AnyEvent;
 {
     my $cv   = AnyEvent->condvar;
     my $juno = Juno->new(
-        interval => 1,
+        interval => 0.1,
         checks   => {
             TestCheckFzVS33 => {
                 on_success => sub {
@@ -184,7 +184,7 @@ use AnyEvent;
 
 my $cv    = AnyEvent->condvar;
 my $w; $w = AnyEvent->timer(
-    after => 3,
+    after => 1,
     cb    => sub {
         undef $w;
         $cv->send;
