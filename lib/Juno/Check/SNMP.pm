@@ -7,7 +7,7 @@ use Carp;
 use Moo;
 use MooX::Types::MooseLike::Base qw<Str Int>;
 use Sub::Quote 'quote_sub';
-use namespace::autoclean;
+use namespace::sweep;
 
 with 'Juno::Role::Check';
 

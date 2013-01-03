@@ -7,7 +7,7 @@ use Moo;
 use MooX::Types::MooseLike::Base qw<Str Num ArrayRef HashRef>;
 use Sub::Quote;
 use Class::Load 'load_class';
-use namespace::autoclean;
+use namespace::sweep;
 
 with 'MooseX::Role::Loggable';
 

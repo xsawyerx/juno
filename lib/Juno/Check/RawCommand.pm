@@ -11,7 +11,7 @@ use System::Command;
 
 use Moo;
 use MooX::Types::MooseLike::Base qw<Str>;
-use namespace::autoclean;
+use namespace::sweep;
 
 with 'Juno::Role::Check';
 

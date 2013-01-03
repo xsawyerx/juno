@@ -6,7 +6,7 @@ package Juno::Check::TCP;
 use Moo;
 use MooX::Types::MooseLike::Base qw<Int>;
 use AnyEvent::Socket;
-use namespace::autoclean;
+use namespace::sweep;
 
 with 'Juno::Role::Check';
 

@@ -6,7 +6,7 @@ package Juno::Check::HTTP;
 use AnyEvent::HTTP;
 use Moo;
 use MooX::Types::MooseLike::Base qw<Str HashRef>;
-use namespace::autoclean;
+use namespace::sweep;
 
 with 'Juno::Role::Check';
 
