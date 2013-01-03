@@ -34,6 +34,12 @@ has on_before => (
     predicate => 1,
 );
 
+has on_result => (
+    is        => 'ro',
+    isa       => CodeRef,
+    predicate => 1,
+);
+
 has on_success => (
     is        => 'ro',
     isa       => CodeRef,
@@ -41,12 +47,6 @@ has on_success => (
 );
 
 has on_fail => (
-    is        => 'ro',
-    isa       => CodeRef,
-    predicate => 1,
-);
-
-has on_result => (
     is        => 'ro',
     isa       => CodeRef,
     predicate => 1,
@@ -81,41 +81,132 @@ __END__
 
 =head1 DESCRIPTION
 
-This role provides Juno checks with basic functionality they all share.
+This role provides Juno checks with basic functionality they all share. This
+document is intended for anyone writing (or planning on writing) a check for
+L<Juno>.
+
+The purpose of this role is to both enforce behavior of Juno checks and
+provide various helpful attributes and methods for any check.
+
+=head1 CONSTRAINTS
+
+The role requires the consumer object implements a B<check> method.
 
 =head1 ATTRIBUTES
 
 =head2 hosts
 
-Custom per-check hosts list.
+An arrayref consisting a list of hosts (with no enforcement other than a
+string) that can then be checked. Each check has multiple hosts so they are
+check more than a single target in each object instance. This can be an IP
+address or a hostname of any type. Different types can be mixed freely.
+
+This attribute is being propagated from the main L<Juno> object.
+
+Default: B<empty array>.
 
 =head2 interval
 
-Custom per-check interval.
+A number (including fractions) indicating the interval of your check. This role
+runs your check (using the C<check> method you provide) in this interval, so
+you shouldn't worry or care about it. You can, however, specify a different
+default interval, if you want.
+
+Default: B<10> seconds.
 
 =head2 after
 
-Custom pre-check delay seconds
+A number (including fractions) indicating the delay before the checking cycle
+begins. This only applies for the first check. From that point on, the cycles
+will be scheduled every interval indicated by the C<interval> attribute.
+
+Default: B<0> seconds. This means it should start right away.
 
 =head2 on_before
 
-A callback for before an action occurs.
+A callback to run before an action occurs. Your check needs to call it before
+you actually call whatever check you're running. This gives the user an
+opportunity to time the check itself or to log it, for instance.
 
-=head2 on_success
-
-A callback for when an action succeeded.
-
-=head2 on_fail
-
-A callback for when an action failed.
+You can check whether you got such a callback using the predicate
+C<has_on_before> described below.
 
 =head2 on_result
 
-A callback to catch any result.
+A callback to run as soon as an action returns some response. You need to
+provide the user with this to let them control it all if that's what they want.
+Perhaps they don't want to count on your decision of what is good or not, or
+perhaps they have different values for good or bad.
 
-This is useful if you have your own logic and don't count on the check to
-decide if something is successful or not.
+You can check whether you got such a callback using the predicate
+C<has_on_result> described below.
 
-Suppose you run the HTTP check and you have a special setup where 403 Forbidden
-is actually a correct result.
+=head2 on_success
+
+A callback to run when you decide a check has been successful. For example,
+L<Juno::Check::HTTP> calls this callback if the response code has C<2xx>.
+
+You can check whether you got such a callback using the predicate
+C<has_on_success> described below.
+
+=head2 on_fail
+
+A callback to run when you decide a check has failed. This is the opposite
+of the above. For example, L<Juno::Check::HTTP> calls this callback if the
+response code is anything but C<2xx>.
+
+You can check whether you got such a callback using the predicate
+C<has_on_fail> described below.
+
+=head2 watcher
+
+A watcher attribute that holds the timer that runs your check. You can change
+this watcher using the C<set_watcher> method below or reset the watcher (thus
+ending your check, even if Juno is still running) using the C<reset_watcher>
+method below.
+
+=head1 METHODS
+
+=head2 has_on_before
+
+This is a predicate method to check whether the user has give you an
+C<on_before> callback.
+
+=head2 has_on_result
+
+This is a predicate method to check whether the user has give you an
+C<on_result> callback.
+
+=head2 has_on_success
+
+This is a predicate method to check whether the user has give you an
+C<on_success> callback.
+
+=head2 has_on_fail
+
+This is a predicate method to check whether the user has give you an
+C<on_fail> callback.
+
+=head2 run
+
+This method is called by L<Juno> (but can be called separately if that's what
+you want to do) in order to schedule and run your check.
+
+This sets the timer (under the C<watcher> attribute described above) for your
+check.
+
+=head2 set_watcher
+
+This method can override the existing watcher. It's hard to think of a usage
+for it, but there it is anyway.
+
+=head2 clear_watcher
+
+This method clears the watcher completely, thus stopping your check. It will
+not stop any existing code, but will make sure no more cycles of your check
+will run. It also doesn't stop Juno from running, or other checks from
+running for that matter. It will only stop yours, while lettings everything
+continue running.
+
+This can mostly be useful for the user.
 
