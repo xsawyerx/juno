@@ -6,6 +6,7 @@ package Juno::Role::Check;
 use AnyEvent;
 use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Str Num CodeRef ArrayRef>;
+use PerlX::Maybe;
 use namespace::sweep;
 
 with 'MooseX::Role::Loggable';
@@ -65,11 +66,9 @@ sub run {
 
     # keep a watcher per check
     $self->set_watcher( AnyEvent->timer(
-        interval => $self->interval,
-        $self->after ? (after => $self->after) : (),
-        cb       => sub {
-            $self->check;
-        },
+        maybe after    => $self->after,
+              interval => $self->interval,
+              cb       => sub { $self->check },
     ) );
 
     return 1;
