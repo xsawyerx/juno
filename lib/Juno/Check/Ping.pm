@@ -25,8 +25,8 @@ has ping_interval => (
 );
 
 has ping_timeout => (
-    is      => 'ro',
-    isa     => Num,
+    is        => 'ro',
+    isa       => Num,
     predicate => 'has_ping_timeout',
 );
 
@@ -35,7 +35,6 @@ has count => (
     isa     => Int, #change this for a check of the data (positive int - no zero)
     default => sub {1},
 );
-
 
 sub _build_pinger {
     my $self   = shift;
@@ -53,7 +52,6 @@ sub check {
     my $pinger = $self->pinger;
 
     foreach my $host (@hosts) {
-
         $self->has_on_before
             and $self->on_before->( $self, $host );
 
