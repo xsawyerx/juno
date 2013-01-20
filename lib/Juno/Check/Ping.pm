@@ -15,7 +15,6 @@ has pinger => (
     is      => 'ro',
     isa     => Object,
     lazy    => 1,
-    default => sub { AnyEvent::Ping->new },
     builder => '_build_pinger'
 );
 
