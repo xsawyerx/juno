@@ -3,59 +3,90 @@
 use strict;
 use warnings;
 
-use Test::More;
-
+use Test::More tests => 27;
 use AnyEvent;
 use Juno::Check::Ping;
 
+# TODO: check the on_before
+# TODO: check an illegal packet
+
+my %checks = (
+    # single packets, success
+    HostA => [ [ 'OK', 0.001 ] ],
+
+    # multiple packets, one is okay
+    HostB => [
+        [ 'TIMEOUT', 0.02  ],
+        [ 'TIMEOUT', 0.03  ],
+        [ 'OK',      0.001 ],
+        [ 'TIMEOUT', 0.02  ],
+    ],
+
+    # multiple packets, none are okay
+    HostC => [
+        [ 'TIMEOUT',   0.02 ],
+        [ 'TIMEOUT',   0.03 ],
+        [ 'MALFORMED', 0.02 ],
+    ],
+);
+
 {
-    local $@ = undef;
-    eval 'use AnyEvent::Ping';
-    $@ and plan skip_all => 'AnyEvent::Ping is required for this test';
+    package FakePinger;
+    use Moo;
+    has timeout  => ( is => 'ro' );
+    has interval => ( is => 'ro' );
+    sub ping {
+        my ( $self, $host, $num, $cb ) = @_;
+        ::isa_ok( $self, 'FakePinger' );
+        ::ok( exists $checks{$host}, "$host exists (FakePinger)" );
+        ::cmp_ok( $num, '==', 1, 'Correct number of packets requested' );
+        $cb->( $checks{$host} );
+    }
 }
 
-plan tests => 8;
-
-my @checks_data =	(
-						{ host => "127.0.0.1", answer => "OK", },
-						{ host => "255.255.255.254", answer => "TIMEOUT", },
-					);
-sub checks {
-    my ( $check, $host, $answer, $supposed_answer ) = @_;
-
-    isa_ok( $check, 'Juno::Check::Ping' );
-#    is( $host,  'Correct Host' );
-    is( $answer->[0][0], $supposed_answer, "Answer should be '$supposed_answer', Got '$answer->[0][0]'" );
+sub check {
+    my ( $checker, $host, $answer ) = @_;
+    isa_ok( $checker, 'Juno::Check::Ping' );
+    ok( exists $checks{$host}, "Host $host exists" );
+    is_deeply(
+        $answer, $checks{$host}, "Correct answer for $host"
+    );
 }
 
-my $cv    = AnyEvent->condvar;
+my $cv = AnyEvent->condvar;
 
-for my $check_data ( @checks_data ) {
+# three hosts, each taking two callbacks
+# once for result, and one for either success or fail
+$cv->begin for 1 .. ( 3 * 2 );
 
-	# set up 2 points to resolve
-	$cv->begin for 1 .. 2;
+use Juno;
+use Juno::Check::Ping;
+my $juno = Juno->new(
+    checks        => {},
+    check_objects => [
+        Juno::Check::Ping->new(
+            pinger     => FakePinger->new,
+            hosts      => [ qw<HostA HostB HostC> ],
+            on_success => sub {
+                check(@_);
+                $cv->end;
+            },
 
-	my $check = Juno::Check::Ping->new(
-		hosts		=> [ $check_data->{ host }, ] ,
-		on_success => sub {
-			checks(@_, $check_data->{ answer });
-			$cv->end;
-		},
+            on_fail => sub {
+                check(@_);
+                $cv->end;
+            },
 
-		on_fail    => sub {
-			checks(@_, $check_data->{ answer });
-			$cv->end;
-		},
+            on_result => sub {
+                check(@_);
+                $cv->end;
+            },
+        ),
+    ],
+);
 
-		on_result  => sub {
-			checks(@_, $check_data->{ answer });
-			$cv->end;
-		},
-	);
-
-	# start check
-	$check->run;
-}
+# start check
+$juno->run;
 
 # wait for test_number*scalar(@array) points to resolve
 $cv->recv;
