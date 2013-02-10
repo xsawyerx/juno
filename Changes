@@ -1,5 +1,16 @@
 Revision history for Perl extension Juno
 
+0.009   10.02.13
+        * Added pure Ping test (thanks, BelGoat).
+        * Documentation overhaul.
+        * Avoid loading Class::MOP.
+        * Really really really don't depend on Moose.
+        * Reinstated finer-grained type constraints.
+        * Rewrote HTTP check test (thanks for the heads up, BelGoat).
+        * Shave some seconds off the testing.
+        * Code cleanup.
+        * More modern usage of MooseX::Role::Loggable.
+
 0.008   22.07.12
         * Fixing lazy-yet-required attribute with subclassing that adds a
           builder as well.
