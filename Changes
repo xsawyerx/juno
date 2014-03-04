@@ -1,5 +1,9 @@
 Revision history for Perl extension Juno
 
+0.010
+        * Fix hanging on Windows if AnyEvent::Ping is not present.
+          (thanks, Alexandr Ciornii)
+
 0.009   10.02.13
         * Added pure Ping test (thanks, BelGoat).
         * Documentation overhaul.
