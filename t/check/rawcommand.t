@@ -63,6 +63,7 @@ my $check = Juno::Check::RawCommand->new(
 
     # appease System::Command
     *System::Command::_reap = sub {0};
+    *System::Command::close = sub {0};
 }
 
 isa_ok( $check, 'Juno::Check::RawCommand' );
